@@ -1,0 +1,74 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
+    <title>Edit Profile</title>
+</head>
+
+<body>
+    <div class="mobile-container">
+        <form action="/edit-user" method="POST" autocomplete="off">
+            <div class="back">
+                <a href="/"><img src="/img/back.png"></a>
+            </div>
+            <fieldset>
+                <h1>Edit Profile</h1>
+            </fieldset>
+            <fieldset>
+                <input
+                  id="fullName" 
+                  type="text" 
+                  name="fullName"
+                  value="<% if (editing) { %> <%= fullName %> <% } %>"
+                  disabled="<% if (editing) { %><%= editing %><% } %>">
+                <label for="fullName" style="top: 0; transform: scale(0.6, 0.6);">Full Name</label>
+                <div class="after"></div>
+            </fieldset>
+            <fieldset>
+                <input
+                  id="email"
+                  type="email"
+                  name="email" 
+                  required
+                  value="<% if (editing) { %> <%= email %> <% } %>"
+                  disabled="<% if (editing) { %><%= editing %><% } %>"  
+                >
+                <label for="email" style="top: 0; transform: scale(0.6, 0.6);">Email Address</label>
+                <div class="after"></div>
+            </fieldset>
+            <fieldset>
+                <h1>Price/UNIT</h1>
+                <fieldset>
+                    <input
+                      id="pricePerWaterUnit"
+                      type="number"
+                      name="pricePerWaterUnit"
+                      required 
+                      value="<% if (editing) { %><%= pricePerWaterUnit %><% } %>"
+                    >
+                    <label for="pricePerWaterUnit" style="top: 0; transform: scale(0.6, 0.6);">Price per Water Unit</label>
+                    <div class="after"></div>
+                </fieldset>
+                <fieldset>
+                    <input
+                      id="pricePerElectricityUnit"
+                      type="number"
+                      name="pricePerElectricityUnit"
+                      required
+                      value="<% if (editing) { %><%= pricePerElectricityUnit %><% } %>"
+                    >
+                    <label for="pricePerElectricityUnit" style="top: 0; transform: scale(0.6, 0.6);">Price per Electric Unit</label>
+                    <div class="after"></div>
+                </fieldset>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <input type="hidden" name="password" value="<%= password %>" />
+                <input type="hidden" name="id" value="<%= id %>" />
+                <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>

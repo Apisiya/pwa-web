@@ -1,0 +1,56 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style1.css" />
+    <link rel="stylesheet" href="/css/error.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <form action="/login" method="POST" autocomplete="off">
+        <fieldset>
+          <h1>Member Login</h1>
+          <% if (errorMessage) { %>
+          <div class="user-message user-message--error">
+            <%= errorMessage %>
+          </div>
+          <% } %>
+        </fieldset>
+        <fieldset>
+          <input
+            id="email"
+            type="text"
+            name="email"
+            required
+            class="<%= validationErrors.find(e => e.param === 'email') ? 'invalid': '' %>"
+            value="<%= oldInput.email %>"
+          />
+          <label for="email">E-Mail</label>
+          <div class="after"></div>
+        </fieldset>
+        <fieldset>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            required
+            class="<%= validationErrors.find(e => e.param === 'password') ? 'invalid': '' %>"
+            value="<%= oldInput.password %>"
+          />
+          <label for="password">Password</label>
+          <div class="after"></div>
+        </fieldset>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button>
+          Sign in
+        </button>
+        <a href="/signup" style="text-decoration: none;">Register</a>
+      </form>
+    </div>
+  </body>
+</html>

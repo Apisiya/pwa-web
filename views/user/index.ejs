@@ -1,0 +1,241 @@
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <link rel="stylesheet" href="/css/style2.css" />
+    <title>Calculate Water and Electricity Meter Bill</title>
+  </head>
+
+  <body>
+    <div class="mobile-container">
+      <div class="my_nav">
+        <div class="dropdown">
+          <button
+            class="btn btn-primary dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+          >
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a href="/unit/water">Add Water Unit</a></li>
+            <li><a href="/unit/electricity">Add Electricity Unit</a></li>
+            <li><a href="/edit-user/<%= userId %>?edit=true">Edit user</a></li>
+            <li>
+              <form action="/logout" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <button type="submit">Logout</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+        <div class="wrapper">
+          <p>Today's <h1><%= date %> <%= month %> <%= year %></h1></p>
+          <h1 id="date" class="date"></h1>
+          <!-- <h3 id="time" class="time"></h3> -->
+          <div class="box-area">
+            <div class="content">
+              <div class="box box-one">
+                <p>Water bill</p>
+                <p>Bath</p>
+                <% if (waterCalculate.length > 0) { %>
+                  <h1><%= waterCalculate.slice(-1).pop().price %></h1>
+                <% } %>
+              </div>
+            </div>
+            <div class="content">
+              <div class="box-two box">
+                <p>Electricity bill</p>
+                <p>Bath</p>
+                <% if (electricityCalculate.length > 0) { %>
+                  <h1><%= electricityCalculate.slice(-1).pop().price %></h1>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wrapper">
+        <p>Water bill</p>
+        <% if (waterCalculate.length > 0) { %>
+          <p><%= waterCalculate.slice(-1).pop().price %><small>Bath</small></p>
+        <% } %>
+        
+      </div>
+
+      <p></p>
+      <div class="bar-area">
+        <canvas id="myChart-1"></canvas>
+      </div>
+      <div class="wrapper">
+        <p>Electricity bill</p>
+        <% if (electricityCalculate.length > 0) { %>
+          <p><%= electricityCalculate.slice(-1).pop().price %><small>Bath</small></p>
+        <% } %>
+        
+      </div>
+      <div class="bar-area">
+        <canvas id="myChart-2"></canvas>
+      </div>
+    </div>
+    <script>
+      var ctx = document.getElementById("myChart-1").getContext("2d");
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: "line", // also try bar or other graph types
+
+        // The data for our dataset
+        data: {
+          labels: <%-JSON.stringify(waterDataDate)%>,
+          // Information about the dataset
+          datasets: [
+            {
+              label: "Unit",
+              backgroundColor: "rgba(252,228,238,0.3)", //line bg
+              borderColor: "#00CCFF",
+              pointBorderWidth: 5,
+              pointHoverBorderWidth: 8,
+              data:  <%-JSON.stringify(waterDataUnits)%>,
+            },
+          ],
+        },
+
+        // Configuration options
+        options: {
+          maintainAspectRatio: false,
+          tooltips: {
+            callbacks: {
+            label: function(tooltipItem) {
+              const temp = tooltipItem.xLabel.split('/')
+              if(temp[0] === '8'){
+
+                const index = <%-JSON.stringify(waterCalculate)%>.findIndex(data => data.date.toString() === tooltipItem.xLabel.toString())
+                if(index != -1 && index != 0){
+                  return "จำนวน unit ในเดือนนี้: " + tooltipItem.yLabel + " จำนวน unit ที่ต่างจากเดือนที่แล้ว" +  ": " + <%-JSON.stringify(waterCalculate)%>[index].differenceUnit + " มีค่าใช้จ่ายทั้งสิ้น $" + <%-JSON.stringify(waterCalculate)%>[index].price;
+                }else {
+                  return "จำนวน unit ในเดือนนี้: " + tooltipItem.yLabel
+                }
+
+              } else{
+                return "จำนวน unit ในเดือนนี้: " + tooltipItem.yLabel
+              }
+
+              }
+            }
+          },
+
+          title: {
+            display: true,
+            text: "กราฟแสดงหน่วยค่าน้ำ",
+          },
+          scales: {
+            yAxes: [
+              {
+                scaleLabel: {
+                  display: true,
+                  labelString: "Units",
+                },
+              },
+            ],
+            xAxes: [
+              {
+                scaleLabel: {
+                  display: true,
+                  labelString: "Date",
+                },
+              },
+            ],
+          },
+        },
+
+      });
+    </script>
+    <script>
+      var ctx = document.getElementById("myChart-2").getContext("2d");
+      var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: "line", // also try bar or other graph types
+
+        // The data for our dataset
+        data: {
+          labels: <%-JSON.stringify(electricityDataDate)%>,
+          // Information about the dataset
+          datasets: [
+            {
+              label: "Unit",
+              backgroundColor: "rgba(252,228,238,0.3)", //line bg
+              borderColor: "#FFCC33",
+              pointBorderWidth: 5,
+              pointHoverBorderWidth: 8,
+              data:  <%-JSON.stringify(electricityDataUnits)%>,
+            },
+          ],
+        },
+
+        // Configuration options
+        options: {
+          maintainAspectRatio: false,
+          tooltips: {
+            callbacks: {
+            label: function(tooltipItem) {
+              const temp = tooltipItem.xLabel.split('/')
+              if(temp[0] === '23'){
+
+                const index = <%-JSON.stringify(electricityCalculate)%>.findIndex(data => data.date.toString() === tooltipItem.xLabel.toString())
+                if(index != -1 && index != 0){
+                  return "จำนวน unit ในเดือนนี้: " + tooltipItem.yLabel + " จำนวน unit ที่ต่างจากเดือนที่แล้ว" +  ": " + <%-JSON.stringify(electricityCalculate)%>[index].differenceUnit + " มีค่าใช้จ่ายทั้งสิ้น $" + <%-JSON.stringify(electricityCalculate)%>[index].price;
+                }else {
+                  return "จำนวน unit ในเดือนนี้: " + tooltipItem.yLabel
+                }
+
+              } else{
+                return "จำนวน unit ในเดือนนี้: " + tooltipItem.yLabel
+              }
+
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: "กราฟแสดงหน่วยค่าไฟ",
+          },
+          scales: {
+            yAxes: [
+              {
+                scaleLabel: {
+                  display: true,
+                  labelString: "Units",
+                },
+              },
+            ],
+            xAxes: [
+              {
+                scaleLabel: {
+                  display: true,
+                  labelString: "Date",
+                },
+              },
+            ],
+          },
+        },
+
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style1.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/error.css">
+    <title>Calculate Water and Electricity Meter Bill</title>
+</head>
+
+<body>
+    <div class="mobile-container">
+        <form action="/add-unit-electricity" method="POST" autocomplete="off">
+            <div class="back">
+                <a href="/"><img src="/img/back.png"></a>
+            </div>
+            <fieldset>
+                <h1>Electricity Unit</h1>
+                <% if (errorMessage) { %>
+                  <div class="user-message user-message--error">
+                    <%= errorMessage %>
+                  </div>
+                <% } %>
+            </fieldset>
+            <fieldset>
+                <input id="unitElectricity" type='number' name="unitElectricity" value="<%= value %>" required>
+                <label for="unitElectricity">Unit Number</label>
+                <div class="after"></div>
+            </fieldset>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <button type="submit">Submit</a></button>
+        </form>
+    </div>
+</body>
+
+</html>

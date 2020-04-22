@@ -1,0 +1,112 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style1.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/error.css" />
+    <title>Register</title>
+  </head>
+
+  <body>
+    <div class="mobile-container">
+      <form action="/signup" method="POST" autocomplete="off">
+        <div class="back">
+          <a href="/"><img src="/img/back.png"></a>
+      </div>
+        <fieldset>
+          <h1>Register</h1>
+          <% if (errorMessage) { %>
+          <div class="user-message user-message--error">
+            <%= errorMessage %>
+          </div>
+          <% } %>
+        </fieldset>
+        <fieldset>
+          <input
+            id="fullName"
+            type="text"
+            name="fullName"
+            required
+            class="<%= validationErrors.find(e => e.param === 'name') ? 'invalid': '' %>"
+            value="<%= oldInput.name %>"
+          />
+          <label for="fullName">Full Name</label>
+          <div class="after"></div>
+        </fieldset>
+        <fieldset>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            required
+            class="<%= validationErrors.find(e => e.param === 'email') ? 'invalid': '' %>"
+            value="<%= oldInput.email %>"
+          />
+          <label for="email">Email Address</label>
+          <div class="after"></div>
+        </fieldset>
+        <fieldset>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            required
+            class="<%= validationErrors.find(e => e.param === 'password') ? 'invalid': '' %>"
+            value="<%= oldInput.password %>"
+          />
+          <label for="password">Password</label>
+          <div class="after"></div>
+        </fieldset>
+        <fieldset>
+          <input
+            id="confirmPassword"
+            type="password"
+            name="confirmPassword"
+            required
+            class="<%= validationErrors.find(e => e.param === 'confirmPassword') ? 'invalid': '' %>"
+            value="<%= oldInput.confirmPassword %>"
+          />
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="after"></div>
+        </fieldset>
+        <fieldset>
+          <h1>UNIT</h1>
+        </fieldset>
+
+        <fieldset>
+          <input
+            id="pricePerWaterUnit"
+            type="number"
+            name="pricePerWaterUnit"
+            required
+            placeholder="Price per water unit"
+            class="<%= validationErrors.find(e => e.param === 'pricePerWaterUnit') ? 'invalid': '' %>"
+            value="<%= oldInput.pricePerWaterUnit %>"
+          />
+          <label for="pricePerWaterUnit">Price per Water Unit</label>
+          <div class="after"></div>
+        </fieldset>
+
+        <fieldset>
+          <input
+            id="pricePerElectricityUnit"
+            type="number"
+            name="pricePerElectricityUnit"
+            required
+            placeholder="Price per electricity unit"
+            class="<%= validationErrors.find(e => e.param === 'pricePerWaterUnit') ? 'invalid': '' %>"
+            value="<%= oldInput.pricePerWaterUnit %>"
+          />
+          <label for="pricePerElectricityUnit">Price per Electric Unit</label>
+          <div class="after"></div>
+        </fieldset>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <button type="submit">Create Account</button>
+      </form>
+    </div>
+  </body>
+</html>
