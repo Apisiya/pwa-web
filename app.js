@@ -1,7 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const MONGO_URI = "mongodb+srv://admin:admin@pwa-cfopw.mongodb.net/pwa";
+const MONGO_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@pwa-cfopw.mongodb.net/${process.env.MONGODB_DATABASE}`;
 const path = require("path");
+const helmet = require("helmet");
+const compression = require("compression");
 
 const app = express();
 
@@ -72,10 +74,14 @@ const userRoutes = require("./routes/user");
 app.use(authRoutes);
 app.use(userRoutes);
 
+//helmet and compression
+app.use(helmet());
+app.use(compression());
+
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGO_URI, { useNewUrlParser: true })
   .then((result) => {
     console.log("connected");
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   })
   .catch((err) => console.log(err));
