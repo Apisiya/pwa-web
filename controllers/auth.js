@@ -91,13 +91,23 @@ exports.postSignup = (req, res, next) => {
   bcrypt
     .hash(password, 12)
     .then((hashedPassword) => {
+      const date = new Date().getDate();
+      const month = new Date().getMonth();
+      const year = new Date().getFullYear();
       const user = new User({
         name: name,
         email: email,
         password: hashedPassword,
         pricePerWaterUnit: pricePerWaterUnit,
         pricePerElectricityUnit: pricePerElectricityUnit,
-        units: { water: [], electricity: [] },
+        units: { water: [{
+          date: strDate,
+          units: 0
+          }]
+          , electricity: [{
+            date: strDate,
+            units: 0
+            }] },
       });
       return user.save();
     })
